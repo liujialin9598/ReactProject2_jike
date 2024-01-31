@@ -15,17 +15,17 @@ const { Header, Sider } = Layout;
 
 const items = [
   {
-    label: "首页",
+    label: "Home",
     key: "/",
     icon: <HomeOutlined />,
   },
   {
-    label: "文章管理",
+    label: "Article Manage",
     key: "/article",
     icon: <DiffOutlined />,
   },
   {
-    label: "创建文章",
+    label: "Article Publish",
     key: "/publish",
     icon: <EditOutlined />,
   },

@@ -1,5 +1,6 @@
 // 用户相关的状态管理
 
+import { getProfileAPI, loginAPI } from "@/apis/user";
 import { getToken, request, setToken as _setToken, removeToken } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -37,7 +38,7 @@ export default userStore.reducer;
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     //发送异步请求 Send asynchronous request
-    const res = await request.post("/authorizations", loginForm);
+    const res = await loginAPI(loginForm);
     //存入token save tokeni
     dispatch(setToken(res.data.token));
   };
@@ -46,7 +47,7 @@ const fetchLogin = (loginForm) => {
 //异步方法: 获取个人用户信息
 const fetchUserInfo = () => {
   return async (dispatch) => {
-    const res = await request.get("/user/profile");
+    const res = await getProfileAPI();
     dispatch(setUserInfo(res.data));
   };
 };

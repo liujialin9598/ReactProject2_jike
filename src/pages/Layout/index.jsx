@@ -1,9 +1,10 @@
-import React from 'react'
+import { request } from "@/utils";
+import React, { useEffect } from "react";
 
 export default function Layout() {
-  return (
-    <div>
-      layout
-    </div>
-  )
+  useEffect(() => {
+    request.get("/user/profile");
+  });
+
+  return <div>layout</div>;
 }

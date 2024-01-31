@@ -29,9 +29,9 @@ const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     //发送异步请求 Send asynchronous request
     const res = await request.post("/authorizations", loginForm);
-    //存入token save token
+    //存入token save tokeni
     dispatch(setToken(res.data.token));
-  };2
+  };
 };
 
 //导出异步代码

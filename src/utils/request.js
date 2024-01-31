@@ -1,5 +1,6 @@
 // axios 封装
 import axios from "axios";
+import { getToken } from "./index";
 
 // 1. 根域名配置 baseUrl
 // 2. 超时时间 timeout
@@ -12,6 +13,14 @@ const request = axios.create({
 // 添加请求拦截器 在请求发送之前拦截, 插入自定义的配置.
 request.interceptors.request.use(
   (config) => {
+    //操作config 注入自己的token数据
+    //operate config and inject token data
+    //1. 获取token
+    //1. get token
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {

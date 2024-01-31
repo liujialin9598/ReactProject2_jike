@@ -9,7 +9,7 @@ import "./index.scss";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserInfo } from "@/store/modules/user";
+import { clearUserInfo, fetchUserInfo } from "@/store/modules/user";
 
 const { Header, Sider } = Layout;
 
@@ -47,8 +47,13 @@ const GeekLayout = () => {
   useEffect(() => {
     dispatch(fetchUserInfo());
   }, [dispatch]);
-
   const user = useSelector((state) => state.user);
+
+  //确认退出
+  const exitConfirm = () => {
+    dispatch(clearUserInfo());
+    navigate('/login')
+  };
 
   return (
     <Layout>
@@ -57,8 +62,13 @@ const GeekLayout = () => {
         <div className="user-info">
           <span className="user-name">{user.userInfo.name}</span>
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
-              <LogoutOutlined /> 退出
+            <Popconfirm
+              title="Do you want to exit?"
+              okText="Exit"
+              cancelText="Cancel"
+              onConfirm={exitConfirm}
+            >
+              <LogoutOutlined /> Logout
             </Popconfirm>
           </span>
         </div>

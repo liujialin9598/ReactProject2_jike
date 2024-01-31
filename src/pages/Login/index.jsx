@@ -1,10 +1,22 @@
 import "./index.scss";
-import { Card, Form, Input, Button } from "antd";
+import { Card, Form, Input, Button, message } from "antd";
 import logo from "@/assets/logo.png";
+import { fetchLogin } from "@/store/modules/user";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const onFinish = (value) => {
-    console.log(value);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const onFinish =async (value) => {
+    //触发异步请求 trigger asynchronous actions
+    //等待fetch正确返回 await fetch success
+    await dispatch(fetchLogin(value));
+
+    // 1. 跳转到首页 go to home page
+    navigate("/");
+    // 2. 提示一下用户 alert user
+    message.success("Login success");
   };
 
   return (
@@ -15,7 +27,8 @@ const Login = () => {
         {/* login form */}
         <Form validateTrigger="onBlur" onFinish={onFinish}>
           <Form.Item
-            name="username"
+            name="mobile"
+            initialValue="13888888888"
             rules={[
               // 多条逻辑 按照顺序校验
               {
@@ -31,7 +44,8 @@ const Login = () => {
             <Input size="large" placeholder="Username" />
           </Form.Item>
           <Form.Item
-            name="password"
+            name="code"
+            initialValue="246810"
             rules={[
               {
                 required: true,

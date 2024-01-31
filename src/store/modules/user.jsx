@@ -1,17 +1,17 @@
 // 用户相关的状态管理
 
-import { request } from "@/utils";
+import { getToken, request, setToken as _setToken } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 
 const userStore = createSlice({
   name: "user",
   initialState: {
-    token: localStorage.getItem("token_key") || "",
+    token: getToken() || "",
   },
   reducers: {
     setToken(state, action) {
       state.token = action.payload;
-      localStorage.setItem("token_key", action.payload);
+      _setToken(action.payload);
     },
   },
 });
@@ -31,7 +31,7 @@ const fetchLogin = (loginForm) => {
     const res = await request.post("/authorizations", loginForm);
     //存入token save token
     dispatch(setToken(res.data.token));
-  };
+  };2
 };
 
 //导出异步代码

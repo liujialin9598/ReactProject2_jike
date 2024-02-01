@@ -2,9 +2,12 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "@/pages/Layout";
 import Login from "@/pages/Login";
 import { AuthRoute } from "@/components/AuthRoute";
-import Home from "@/pages/Layout/Home";
-import Article from "@/pages/Layout/Article";
-import Publish from "@/pages/Layout/Publish";
+import { Suspense, lazy } from "react";
+
+//1. lazy懒加载
+const Home = lazy(() => import("@/pages/Layout/Home"));
+const Article = lazy(() => import("@/pages/Layout/Article"));
+const Publish = lazy(() => import("@/pages/Layout/Publish"));
 
 const router = createBrowserRouter([
   {
@@ -17,15 +20,27 @@ const router = createBrowserRouter([
     children: [
       {
         index: "home",
-        element: <Home />,
+        element: (
+          <Suspense fallback={"Loading..."}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: "article",
-        element: <Article />,
+        element: (
+          <Suspense fallback={"Loading..."}>
+            <Article />
+          </Suspense>
+        ),
       },
       {
         path: "publish",
-        element: <Publish />,
+        element: (
+          <Suspense fallback={"Loading..."}>
+            <Publish />
+          </Suspense>
+        ),
       },
     ],
   },

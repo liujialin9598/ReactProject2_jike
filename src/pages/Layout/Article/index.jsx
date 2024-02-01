@@ -43,7 +43,12 @@ const Article = () => {
     {
       title: "状态",
       dataIndex: "status",
-      render: (data) => <Tag color="green">审核通过</Tag>,
+      render: (data) =>
+        data == 1 ? (
+          <Tag color="yellow">待审核</Tag>
+        ) : (
+          <Tag color="green">审核通过</Tag>
+        ),
     },
     {
       title: "发布时间",
@@ -84,12 +89,12 @@ const Article = () => {
 
   //获取文章列表
   const [list, setList] = useState([]);
-  const [count,setCount] = useState(0)
+  const [count, setCount] = useState(0);
   useEffect(() => {
     async function getList() {
       const res = await getArticleListApi();
       setList(res.data.results);
-      setCount(res.data.total_count)
+      setCount(res.data.total_count);
     }
     getList();
   }, []);

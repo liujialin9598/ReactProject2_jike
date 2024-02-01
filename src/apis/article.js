@@ -35,10 +35,18 @@ export function deleteArticleAPI(id) {
   });
 }
 
-
 //5. 获取文章详情
-export function getArticleById(id){
+export function getArticleById(id) {
   return request({
-    url:`/mp/articles/${id}`
-  })
+    url: `/mp/articles/${id}`,
+  });
+}
+
+//6. 更新文章
+export function updateArticleById(data) {
+  return request({
+    url: `/mp/articles/${data.id}?draft=false`,
+    method: "PUT",
+    data,
+  });
 }

@@ -16,7 +16,11 @@ import "./index.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
-import { getArticleById, publishArticleAPI } from "@/apis/article";
+import {
+  getArticleById,
+  publishArticleAPI,
+  updateArticleById,
+} from "@/apis/article";
 import { useChannel } from "@/hooks/useChannel";
 
 const { Option } = Select;
@@ -38,13 +42,26 @@ const Publish = () => {
       content,
       cover: {
         type: imageNumber,
-        images: imageList.map((items) => items.response.data.url),
+
+        //更新图片会改变格式
+        images: imageList.map((item) => {
+          if (item.response) {
+            return item.response.data.url;
+          } else {
+            return item.url;
+          }
+        }),
       },
       channel_id,
     };
 
     //2. 调用接口提交
-    publishArticleAPI(reqData);
+    //不同状态不同接口
+    if (articleId) {
+      updateArticleById({ ...reqData, id: articleId });
+    } else {
+      publishArticleAPI(reqData);
+    }
   };
 
   //上传图片

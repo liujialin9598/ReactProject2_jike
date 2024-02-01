@@ -55,6 +55,12 @@ const Publish = () => {
     setImageList(value.fileList);
   };
 
+  //切换图片封面类型
+  const [imageNumber, setImageNumber] = useState(0);
+  const onTypeChange = (e) => {
+    setImageNumber(e.target.value);
+  };
+
   return (
     <div className="publish">
       <Card
@@ -70,7 +76,7 @@ const Publish = () => {
         <Form
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ type: 1 }}
+          initialValues={{ type: 0 }}
           onFinish={onFinish}
         >
           <Form.Item
@@ -95,7 +101,7 @@ const Publish = () => {
           </Form.Item>
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group>
+              <Radio.Group onChange={onTypeChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
@@ -107,17 +113,19 @@ const Publish = () => {
               action : 上传的地址
               onChange : 上传过程中不断执行
             */}
-            <Upload
-              listType="picture-card"
-              name="image"
-              showUploadList
-              onChange={onChange}
-              action={"http://geek.itheima.net/v1_0/upload"}
-            >
-              <div style={{ marginTop: 8 }}>
-                <PlusOutlined />
-              </div>
-            </Upload>
+            {imageNumber>0 && (
+              <Upload
+                listType="picture-card"
+                name="image"
+                showUploadList
+                onChange={onChange}
+                action={"http://geek.itheima.net/v1_0/upload"}
+              >
+                <div style={{ marginTop: 8 }}>
+                  <PlusOutlined />
+                </div>
+              </Upload>
+            )}
           </Form.Item>
           <Form.Item
             label="Content"

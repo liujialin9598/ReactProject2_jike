@@ -7,6 +7,7 @@ import {
   Radio,
   DatePicker,
   Select,
+  Popconfirm,
 } from "antd";
 // 引入date-picker汉化包
 // import locale from "antd/es/date-picker/locale/zh_CN";
@@ -17,7 +18,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import img404 from "@/assets/error.png";
 import { useChannel } from "@/hooks/useChannel";
 import { useEffect, useState } from "react";
-import { getArticleListApi } from "@/apis/article";
+import { deleteArticleAPI, getArticleListApi } from "@/apis/article";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -26,7 +27,7 @@ const Article = () => {
   // 准备列数据
   const columns = [
     {
-      title: "封面",
+      title: "Cover",
       dataIndex: "cover",
       width: 120,
       render: (cover) => {
@@ -36,48 +37,56 @@ const Article = () => {
       },
     },
     {
-      title: "标题",
+      title: "Title",
       dataIndex: "title",
       width: 220,
     },
     {
-      title: "状态",
+      title: "Status",
       dataIndex: "status",
       render: (data) =>
         data == 1 ? (
-          <Tag color="yellow">待审核</Tag>
+          <Tag color="yellow">Pending</Tag>
         ) : (
-          <Tag color="green">审核通过</Tag>
+          <Tag color="green">Published</Tag>
         ),
     },
     {
-      title: "发布时间",
+      title: "pubdate",
       dataIndex: "pubdate",
     },
     {
-      title: "阅读数",
+      title: "Read",
       dataIndex: "read_count",
     },
     {
-      title: "评论数",
+      title: "Comments",
       dataIndex: "comment_count",
     },
     {
-      title: "点赞数",
+      title: "Thumbs Up",
       dataIndex: "like_count",
     },
     {
-      title: "操作",
+      title: "Process",
       render: (data) => {
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
+            <Popconfirm
+              title="Delete the task"
+              description="Are you sure to delete this task?"
+              onConfirm={() => confirm(data)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
         );
       },
@@ -101,6 +110,7 @@ const Article = () => {
   //获取文章列表
   const [list, setList] = useState([]);
   const [count, setCount] = useState(0);
+
   useEffect(() => {
     async function getList() {
       const res = await getArticleListApi(reqData);
@@ -121,6 +131,22 @@ const Article = () => {
     });
 
     //3. 重新渲染table  (复用代码)
+  };
+
+  //分页功能:
+  const onPageChange = (page) => {
+    setReqData({
+      ...reqData,
+      page,
+    });
+  };
+
+  //删除功能
+  const confirm = async (data) => {
+    await deleteArticleAPI(data.id);
+    setReqData({
+      ...reqData,
+    });
   };
 
   return (
@@ -171,8 +197,17 @@ const Article = () => {
         </Form>
       </Card>
 
-      <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={list} />
+      <Card title={` ${count} results found：`}>
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={list}
+          pagination={{
+            total: count,
+            pageSize: reqData.per_page,
+            onChange: onPageChange,
+          }}
+        />
       </Card>
     </div>
   );

@@ -68,7 +68,16 @@ const Publish = () => {
     //1. 通过id获取数据
     async function getArticleDetail() {
       const res = await getArticleById(articleId);
-      form.setFieldsValue(res.data);
+      form.setFieldsValue({
+        ...res.data,
+        type: res.data.cover.type,
+      });
+      setImageNumber(res.data.cover.type);
+      setImageList(
+        res.data.cover.images.map((url) => {
+          return { url };
+        })
+      );
     }
     getArticleDetail();
   }, [articleId, form]);
@@ -134,6 +143,7 @@ const Publish = () => {
                 onChange={onChange}
                 action={"http://geek.itheima.net/v1_0/upload"}
                 maxCount={imageNumber}
+                fileList={imageList}
               >
                 <div style={{ marginTop: 8 }}>
                   <PlusOutlined />

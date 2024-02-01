@@ -79,7 +79,10 @@ const Publish = () => {
         })
       );
     }
-    getArticleDetail();
+    // 只有编辑的时候才需要回填
+    if (articleId) {
+      getArticleDetail();
+    }
   }, [articleId, form]);
 
   return (
@@ -89,7 +92,7 @@ const Publish = () => {
           <Breadcrumb
             items={[
               { title: <Link to={"/"}>Home</Link> },
-              { title: "Article Publish" },
+              { title: articleId ? "Article Edit" : "Article Publish" },
             ]}
           />
         }

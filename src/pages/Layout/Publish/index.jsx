@@ -8,6 +8,7 @@ import {
   Upload,
   Space,
   Select,
+  message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -34,17 +35,21 @@ const Publish = () => {
 
   //提交表单
   const onFinish = (formValue) => {
+    // 校验imageNumer 和 imageList 匹配的
+    if (imageList.length !== imageNumber) return message.warning('Image number and images uploaded don\'t match ')
+
     //1. 按照接口文档处理表单格式
     const { title, content, channel_id } = formValue;
     const reqData = {
       title,
       content,
       cover: {
-        type: 0,
-        images: [],
+        type: imageNumber,
+        images: imageList.map((items) => items.response.data.url),
       },
       channel_id,
     };
+
     //2. 调用接口提交
     publishArticleAPI(reqData);
   };
@@ -99,12 +104,12 @@ const Publish = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="封面">
+          <Form.Item label="Cover">
             <Form.Item name="type">
               <Radio.Group onChange={onTypeChange}>
-                <Radio value={1}>单图</Radio>
-                <Radio value={3}>三图</Radio>
-                <Radio value={0}>无图</Radio>
+                <Radio value={1}>single picture</Radio>
+                <Radio value={3}>three pictures</Radio>
+                <Radio value={0}>no picture</Radio>
               </Radio.Group>
             </Form.Item>
             {/* 
@@ -113,7 +118,7 @@ const Publish = () => {
               action : 上传的地址
               onChange : 上传过程中不断执行
             */}
-            {imageNumber>0 && (
+            {imageNumber > 0 && (
               <Upload
                 listType="picture-card"
                 name="image"
